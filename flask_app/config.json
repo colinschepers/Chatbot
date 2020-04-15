@@ -6,11 +6,13 @@
     "TESTING": true,
     "MACHINE_KEY": "7002f83afbeb44619a54ab7ad05b9844",
     "SECRET_KEY": "dde685fcf6d247ecbac1bf26def578c6",
-    "DATA_DIR": "./data",
+    "MODEL_NAME": "distiluse-base-multilingual-cased",
+    "DATA_PATH": "./data",
     "LOGGING_CONF_FILE": "logging.conf",
     "LOGGER_NAME": "app",
     "LOG_LEVELS": {
         "app": "DEBUG",
-        "werkzeug": "INFO"
+        "werkzeug": "INFO",
+        "transformers": "WARNING"
     }
 }

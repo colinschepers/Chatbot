@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import './static/css/chat_interface.css';
 import './static/css/temporary.css';
-import { callbackify } from 'util';
+//import { callbackify } from 'util';
 
 class SendButton extends Component {
   render() {
@@ -110,11 +110,26 @@ class ChatApp extends Component {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
+          console.log('history result: ' + result);
           this.setState({
             messages: result
           });
-          this.sendMessage('SESSION_START', this.state.messages);
+          this.getWelcomeMessage(this.state.messages);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+  }
+
+  getWelcomeMessage(messages) {
+    fetch("http://localhost:5000/chatbot/welcome", { credentials: "include" })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            messages: [...messages, result]
+          });
         },
         (error) => {
           console.error(error);
@@ -123,17 +138,13 @@ class ChatApp extends Component {
   }
 
   sendMessage(message, messages) {
-    fetch("http://localhost:5000/chatbot/reply?message=" + message, { credentials: "include" })
+    fetch("http://localhost:5000/chatbot/sendmessage?message=" + message, { credentials: "include" })
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
-          let delayInMilliseconds = 200 + 2 * result["message"].length
-          setTimeout(function () {
-            this.setState({
-              messages: [...messages, { "message": result["message"], "isbotmessage": true }]
-            });
-          }.bind(this), delayInMilliseconds);
+          this.setState({
+            messages: [...messages, result]
+          });
         },
         (error) => {
           console.error(error);
