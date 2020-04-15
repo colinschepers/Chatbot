@@ -4,7 +4,6 @@
     "DEBUG": true,
     "DEVELOPMENT": true,
     "TESTING": true,
-    "MACHINE_KEY": "7002f83afbeb44619a54ab7ad05b9844",
     "SECRET_KEY": "dde685fcf6d247ecbac1bf26def578c6",
     "MODEL_NAME": "distiluse-base-multilingual-cased",
     "DATA_PATH": "./data",

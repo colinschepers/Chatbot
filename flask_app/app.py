@@ -1,11 +1,11 @@
 import sys
 import os
 import uuid
-import datetime
 import json
 import psutil
 import argparse
 import werkzeug
+from datetime import datetime
 from flask import Flask, request, session, send_from_directory
 from flask_restful import reqparse
 from config import config
@@ -14,7 +14,7 @@ from chatbot import Chatbot
 
 
 identifier = str(uuid.uuid4())
-created = str(datetime.datetime.utcnow())
+created = str(datetime.utcnow())
 app = Flask(__name__)
 app.debug = config["DEBUG"]
 app.secret_key = config["SECRET_KEY"]
@@ -26,44 +26,68 @@ def root():
     return json.dumps({"message": "Welcome to the Chatbot API!"})
 
 
-@app.route('/chatbot/welcome')
-def chatbot_welcome():
-    session_id = session['id'] = session['id'] if 'id' in session else str(uuid.uuid4())
-    chatbot = Chatbot.load_by_name(session_id)
-    reply = chatbot.get_welcome_message()
-    return app.response_class(response=json.dumps(reply), status=200, mimetype='application/json')
+@app.route('/chatbot/test/welcome')
+def chatbot_test_welcome():
+    history = session['test_history'] = session['test_history'] if 'test_history' in session else []
+    chatbot = Chatbot.load_by_name('default')
+    message = chatbot.get_response('[TEST_WELCOME_MESSAGE]')
+    history.append({'isbotmessage': True, 'message': message, 'date': str(datetime.utcnow())})
+    return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
 
 
-@app.route('/chatbot/sendmessage')
-def chatbot_sendmessage():
+@app.route('/chatbot/test/get')
+def chatbot_test_get():
     parser = reqparse.RequestParser()
     parser.add_argument('message', type=str, required=True, help="parameter message has to be provided")
     args = parser.parse_args()
 
-    session_id = session['id'] = session['id'] if 'id' in session else str(uuid.uuid4())
-    chatbot = Chatbot.load_by_name(session_id)
-    reply = chatbot.get_response(args.message)
-    return app.response_class(response=json.dumps(reply), status=200, mimetype='application/json')
+    history = session['test_history'] = session['test_history'] if 'test_history' in session else []
+    history.append({'isbotmessage': False, 'message': args.message, 'date': str(datetime.utcnow())})
+    chatbot = Chatbot.load_by_name('default')
+    message = chatbot.get_response(args.message)
+    history.append({'isbotmessage': True, 'message': message, 'date': str(datetime.utcnow())})
+    return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
 
 
-@app.route('/chatbot/train')
-def chatbot_train():
+@app.route('/chatbot/test/history')
+def chatbot_test_history():
+    history = session['test_history'] = session['test_history'] if 'test_history' in session else []
+    return app.response_class(response=json.dumps(history), status=200, mimetype='application/json')
+
+
+@app.route('/chatbot/train/welcome')
+def chatbot_train_welcome():
+    history = session['train_history'] = session['train_history'] if 'train_history' in session else []
+    chatbot = Chatbot.load_by_name('default')
+    message = chatbot.get_response('[TRAINING_WELCOME_MESSAGE]')
+    history.append({'isbotmessage': True, 'message': message, 'date': str(datetime.utcnow())})
+    return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
+
+
+@app.route('/chatbot/train/get')
+def chatbot_train_get():
     parser = reqparse.RequestParser()
-    parser.add_argument('message', type=str, required=True, help="parameter message has to be provided")
-    parser.add_argument('response', type=str, required=True, help="parameter message has to be provided")
+    parser.add_argument('message', type=str, required=False, help="parameter message has to be provided")
     args = parser.parse_args()
 
-    session_id = session['id'] = session['id'] if 'id' in session else str(uuid.uuid4())
-    chatbot = Chatbot.load_by_name(session_id)
-    reply = chatbot.add_training_example(args.message, args.response)
-    return app.response_class(response=json.dumps(reply), status=200, mimetype='application/json')
+    history = session['train_history'] = session['train_history'] if 'train_history' in session else []
+    chatbot = Chatbot.load_by_name('default')
+
+    if args.message:
+        if history and history[-1]['isbotmessage']:
+            message = history[-1]['message']
+            chatbot.add(message, args.message)
+        history.append({'isbotmessage': False, 'message': args.message, 'date': str(datetime.utcnow())})
+
+    message = chatbot.get_training_message()
+    history.append({'isbotmessage': True, 'message': message, 'date': str(datetime.utcnow())})
+    return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
 
 
-@app.route('/chatbot/history')
-def chatbot_history():
-    session_id = session['id'] = session['id'] if 'id' in session else str(uuid.uuid4())
-    chatbot = Chatbot.load_by_name(session_id)
-    return app.response_class(response=json.dumps(chatbot.history), status=200, mimetype='application/json')
+@app.route('/chatbot/train/history')
+def chatbot_train_history():
+    history = session['train_history'] = session['train_history'] if 'train_history' in session else []
+    return app.response_class(response=json.dumps(history), status=200, mimetype='application/json')
 
 
 @app.route('/status')
@@ -78,17 +102,6 @@ def get_status():
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(app.root_path, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
-
-
-@app.before_request
-def validate_machine_key():
-    if request.endpoint == 'favicon' or app.env == 'development':
-        return
-
-    parser = reqparse.RequestParser()
-    parser.add_argument('machinekey', type=str, required=True, help="parameter machinekey has to be provided")
-    parser.add_argument('machinekey', type=str, required=True, help="parameter machinekey is invalid", choices=([config["MACHINE_KEY"]]))
-    parser.parse_args()
 
 
 @app.after_request

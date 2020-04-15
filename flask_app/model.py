@@ -3,7 +3,7 @@ import pickle
 import normalization
 from logger import logger
 from config import config
-from data_structures import LimitedSizeDict
+from core import LimitedSizeDict
 from sentence_transformers import SentenceTransformer
 
 
@@ -17,16 +17,13 @@ def encode(texts):
     if len(texts) == 0:
         return []
 
-    logger.debug(f'Starting normalization of {len(texts)} texts')
-    texts = [normalization.normalize(text) for text in texts]
-    new_texts = [text for text in texts if text not in encoding_cache]
+    new_texts = list(set(text for text in texts if text not in encoding_cache))
 
     if len(new_texts) > 0:
         logger.debug(f'Encoding {len(new_texts)} texts')
         new_embeddings = sentence_transformer.encode(new_texts)
         encoding_cache.update(zip(new_texts, new_embeddings))
-
-    save_encoding_cache()
+        save_encoding_cache()
 
     return [encoding_cache[text] for text in texts]
 

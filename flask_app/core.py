@@ -1,3 +1,4 @@
+import re
 from collections import OrderedDict
 
 
@@ -15,3 +16,7 @@ class LimitedSizeDict(OrderedDict):
         if self.size_limit is not None:
             while len(self) > self.size_limit:
                 self.popitem(last=False)
+
+
+def is_keyword(message):
+    return re.match(r"\[.*\]", message)

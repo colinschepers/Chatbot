@@ -5,8 +5,9 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from string import punctuation
+from logger import logger
 from config import config
-from data_structures import LimitedSizeDict
+from core import LimitedSizeDict, is_keyword
 
 
 nltk.download('punkt')
@@ -137,14 +138,33 @@ contractions = {
 }
 
 
+def normalize_multiple(texts):
+    new_texts = [text for text in texts if text not in normalization_cache]
+
+    if len(new_texts) > 0:
+        logger.debug(f'Normalizing {len(new_texts)} texts')
+        new_normalized_texts = [normalize(text) for text in new_texts]
+        normalization_cache.update(zip(new_texts, new_normalized_texts))
+        save_normalization_cache()
+
+    return [normalization_cache[text] for text in texts]
+
+
 def normalize(text):
-    text = text.lower()
-    text = expand_contractions(text, contractions)
-    text = ''.join(char for char in text if char not in punctuation)
-    tokens = nltk.word_tokenize(text)
-    tokens = [wordnet_lemmatizer.lemmatize(token) for token in tokens if token not in stopword]
-    tokens = [token for token in tokens if token not in stopword]
-    return text
+    if is_keyword(text):
+        return text
+
+    if text not in normalization_cache:
+        normalized_text = text.lower()
+        normalized_text = expand_contractions(normalized_text, contractions)
+        normalized_text = ''.join(char for char in normalized_text if char not in punctuation)
+        tokens = nltk.word_tokenize(normalized_text)
+        tokens = [wordnet_lemmatizer.lemmatize(token) for token in tokens if token not in stopword]
+        tokens = [token for token in tokens if token not in stopword]
+        normalized_text = ''.join(token for token in tokens)
+        normalization_cache[text] = normalized_text
+
+    return normalization_cache[text]
 
 
 def expand_contractions(text, contractions):
@@ -161,7 +181,7 @@ def expand_contractions(text, contractions):
     return expanded_text
 
 
-def load_encoding_cache():
+def load_normalization_cache():
     path = os.path.join(config['DATA_PATH'], 'normalization_cache.pkl')
     if os.path.exists(path):
         with open(path, 'rb') as f:
@@ -171,10 +191,10 @@ def load_encoding_cache():
     return LimitedSizeDict(size_limit=1000000)
 
 
-def save_encoding_cache():
+def save_normalization_cache():
     path = os.path.join(config['DATA_PATH'], 'normalization_cache.pkl')
     with open(path, 'wb') as f:
-        pickle.dump({key: encoding_cache[key] for key in encoding_cache.keys()}, f)
+        pickle.dump({key: normalization_cache[key] for key in normalization_cache.keys()}, f)
 
 
-encoding_cache = load_encoding_cache()
+normalization_cache = load_normalization_cache()

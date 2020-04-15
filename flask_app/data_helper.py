@@ -24,7 +24,7 @@ def print_file_by_line(path, encoding="utf8"):
             line = f.readline()
 
 
-# data = read_file('data/base.json') + read_SQuAD('data/SQuAD-train-v2.0.json')
+# data = read_file('data/base.json')
 # messages = [item[0] for item in data]
 # responses = [item[1] for item in data]
 
