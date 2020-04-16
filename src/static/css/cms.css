@@ -48,6 +48,18 @@
   padding: 5px;
 }
 
+.data .data_item .normalized_message {
+  background-color: #ffc485;
+  right: 100%;
+  border-radius: 10px;
+}
+
+.data .data_item .normalized_message .text {
+  color: black;
+  text-align: center;
+  padding: 5px;
+}
+
 .data .data_item .response {
   background-color: #c7eafc;
   float: 100%;
@@ -58,4 +70,54 @@
   color: black;
   text-align: center;
   padding: 5px;
+}
+
+.bottom_wrapper .filter_input_wrapper {
+  display: inline-block;
+  height: 50px;
+  border-radius: 15px;
+  border: 1px solid #bcbdc0;
+  width: calc(100% - 160px);
+  position: relative;
+  padding: 0 20px;
+}
+
+.bottom_wrapper .filter_input_wrapper .filter_input {
+  border: none;
+  height: 100%;
+  box-sizing: border-box;
+  width: calc(100% - 40px);
+  position: absolute;
+  outline-width: 0;
+  color: gray;
+}
+
+.bottom_wrapper .refresh_button {
+  width: 140px;
+  height: 50px;
+  display: inline-block;
+  border-radius: 15px;
+  background-color: #a3d063;
+  border: 2px solid #a3d063;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s linear;
+  text-align: center;
+  float: right;
+}
+
+.bottom_wrapper .refresh_button:hover {
+  color: #a3d063;
+  background-color: #fff;
+}
+
+.bottom_wrapper .refresh_button .text {
+  font-size: 18px;
+  font-weight: 300;
+  display: inline-block;
+  line-height: 48px;
+}
+
+#filter_input {
+  color: black;
 }

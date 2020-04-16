@@ -10,13 +10,6 @@ import Statistics from './static/Statistics.jsx';
 import Configuration from './static/Configuration.jsx';
 import './App.css';
 
-const tab_contents = [
-  <Chatbot label="Chatbot" />,
-  <CMS label="CMS" />,
-  <Statistics label="Statistics" />,
-  <Configuration label="Configuration" />
-]
-
 const theme = createMuiTheme({
   palette: {
     primary: deepOrange,
@@ -26,16 +19,22 @@ const theme = createMuiTheme({
     MuiTab: {
       root: {
         "&:hover": {
-          backgroundColor: '#ffda99'
+          backgroundColor: '#ffda99',
+          borderRadius: 15
         }
       }
     }
   }
 });
 
-class App extends Component {
-  session_start_date = Date.now()
+const tab_contents = [
+  <Chatbot label="Chatbot" />,
+  <CMS label="CMS" />,
+  <Statistics label="Statistics" />,
+  <Configuration label="Configuration" />
+]
 
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {

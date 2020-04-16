@@ -4,24 +4,6 @@ import './css/chatbot.css';
 
 var backendService = new BackendService();
 
-class SendButton extends Component {
-    render() {
-        return (<div className="send_message" onClick={this.props.handleClick}>
-            <div className="text">send</div>
-        </div>);
-    }
-}
-
-class MessageTextBoxContainer extends Component {
-    render() {
-        return (
-            <div className="message_input_wrapper">
-                <input id="msg_input" className="message_input" placeholder="Type your message here..." value={this.props.message} onChange={this.props.onChange} onKeyPress={this.props._handleKeyPress} />
-            </div>
-        );
-    }
-}
-
 class Avatar extends Component {
     render() {
         return (
@@ -77,6 +59,23 @@ class MessagesContainer extends Component {
     }
 }
 
+class MessageTextBoxContainer extends Component {
+    render() {
+        return (
+            <div className="message_input_wrapper">
+                <input id="msg_input" className="message_input" placeholder="Type your message here..." value={this.props.message} onChange={this.props.onChange} onKeyPress={this.props._handleKeyPress} />
+            </div>
+        );
+    }
+}
+
+class SendButton extends Component {
+    render() {
+        return (<div className="send_message" onClick={this.props.handleClick}>
+            <div className="text">send</div>
+        </div>);
+    }
+}
 
 class Chatbot extends Component {
     _isMounted = false;
@@ -95,11 +94,7 @@ class Chatbot extends Component {
     }
 
     _handleKeyPress(e) {
-        let enter_pressed = false;
-        if (e.key === "Enter") {
-            enter_pressed = true;
-        }
-        this.addMessageBox(enter_pressed)
+        this.addMessageBox(e.key === "Enter")
     }
 
     componentDidMount() {
@@ -109,15 +104,13 @@ class Chatbot extends Component {
                 this.setState({
                     messages: result
                 });
-                if (this.state.messages.every((x) => x.date < this.props.session_start_date)) {
-                    backendService.getWelcomeMessage((result) => {
-                        if (this._isMounted) {
-                            this.setState({
-                                messages: [...this.state.messages, result]
-                            });
-                        }
-                    });
-                }
+                backendService.getWelcomeMessage((result) => {
+                    if (this._isMounted) {
+                        this.setState({
+                            messages: [...this.state.messages, result]
+                        });
+                    }
+                });
             }
         });
     }

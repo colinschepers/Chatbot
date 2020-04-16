@@ -8,10 +8,10 @@ class DataItem extends Component {
     render() {
         return (
             <li className="data_item appeared">
-                <div className="message text_wrapper">
+                <div className="message" >
                     <div className="text">{this.props.message}</div>
                 </div>
-                <div className="response text_wrapper">
+                <div className="response" >
                     <div className="text">{this.props.response}</div>
                 </div>
             </li>
@@ -36,7 +36,10 @@ class DataContainer extends Component {
 
     createDataItems() {
         return this.props.data.map((item, index) =>
-            <DataItem key={index} message={item["message"]} response={item["response"]} />
+            <DataItem key={index}
+                message={item["message"]}
+                normalized_message={item["normalized_message"]}
+                response={item["response"]} />
         );
     }
 
@@ -49,33 +52,81 @@ class DataContainer extends Component {
     }
 }
 
+class FilterTextBoxContainer extends Component {
+    render() {
+        return (
+            <div className="filter_input_wrapper">
+                <input
+                    className="filter_input"
+                    placeholder="Type here to filter..."
+                    value={this.props.filter}
+                    onChange={this.props.onChange} />
+            </div>
+        );
+    }
+}
+
+class RefreshButton extends Component {
+    render() {
+        return (<div className="refresh_button" onClick={this.props.handleClick}>
+            <div className="text">refresh data</div>
+        </div>);
+    }
+}
+
 class CMS extends Component {
     _isMounted = true;
 
     constructor(props) {
         super(props);
-        this.state = { "data": [] }
+        this.state = { "data": [], "filtered_data": [], "current_filter": "" }
+        this.onFilterChange = this.onFilterChange.bind(this);
+        this.loadData = this.loadData.bind(this);
     }
 
     componentDidMount() {
         this._isMounted = true;
-        backendService.getData((result) => {
-            if (this._isMounted) {
-                this.setState({
-                    data: result
-                });
-            }
-        });
+        this.loadData();
     }
 
     componentWillUnmount() {
         this._isMounted = false;
     }
 
+    onFilterChange(e) {
+        let filter = e.target.value;
+        let filterWords = filter.toLowerCase().split(" ");
+        let filtered_data = this.state.data.filter((item) => {
+            return filterWords.every(filterWord =>
+                item.message.toLowerCase().includes(filterWord)
+                || item.normalized_message.toLowerCase().includes(filterWord)
+                || item.response.toLowerCase().includes(filterWord)
+            );
+        });
+        this.setState({ filtered_data: filtered_data, current_filter: filter });
+    }
+
+    loadData() {
+        backendService.getData((result) => {
+            if (this._isMounted) {
+                this.setState({
+                    data: result,
+                    filtered_data: result
+                });
+            }
+        });
+    }
+
     render() {
         return (
             <div className="cms_window">
-                <DataContainer data={this.state.data}></DataContainer>
+                <DataContainer data={this.state.filtered_data}></DataContainer>
+                <div className="bottom_wrapper clearfix">
+                    <FilterTextBoxContainer
+                        onChange={this.onFilterChange}
+                        filter={this.state.current_filter}></FilterTextBoxContainer>
+                    <RefreshButton handleClick={this.loadData}></RefreshButton>
+                </div>
             </div>
         );
     }
