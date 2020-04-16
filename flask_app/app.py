@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 import uuid
 import json
 import psutil
@@ -23,54 +24,25 @@ app.config['SESSION_TYPE'] = 'memcached'
 
 @app.route('/')
 def root():
-    return json.dumps({"message": "Welcome to the Chatbot API!"})
+    return json.dumps({"message": "Welcome to the EasyChatbot API!"})
 
 
-@app.route('/chatbot/test/welcome')
-def chatbot_test_welcome():
-    history = session['test_history'] = session['test_history'] if 'test_history' in session else []
+@app.route('/chatbot/welcome')
+def chatbot_welcome():
+    history = session['history'] = session['history'] if 'history' in session else []
     chatbot = Chatbot.load_by_name('default')
-    message = chatbot.get_response('[TEST_WELCOME_MESSAGE]')
+    message = chatbot.get_response('[WELCOME_MESSAGE]')
     history.append({'isbotmessage': True, 'message': message, 'date': str(datetime.utcnow())})
     return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
 
 
-@app.route('/chatbot/test/get')
-def chatbot_test_get():
+@app.route('/chatbot/get')
+def chatbot_get():
     parser = reqparse.RequestParser()
-    parser.add_argument('message', type=str, required=True, help="parameter message has to be provided")
+    parser.add_argument('message', type=str, required=False)
     args = parser.parse_args()
 
-    history = session['test_history'] = session['test_history'] if 'test_history' in session else []
-    history.append({'isbotmessage': False, 'message': args.message, 'date': str(datetime.utcnow())})
-    chatbot = Chatbot.load_by_name('default')
-    message = chatbot.get_response(args.message)
-    history.append({'isbotmessage': True, 'message': message, 'date': str(datetime.utcnow())})
-    return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
-
-
-@app.route('/chatbot/test/history')
-def chatbot_test_history():
-    history = session['test_history'] = session['test_history'] if 'test_history' in session else []
-    return app.response_class(response=json.dumps(history), status=200, mimetype='application/json')
-
-
-@app.route('/chatbot/train/welcome')
-def chatbot_train_welcome():
-    history = session['train_history'] = session['train_history'] if 'train_history' in session else []
-    chatbot = Chatbot.load_by_name('default')
-    message = chatbot.get_response('[TRAINING_WELCOME_MESSAGE]')
-    history.append({'isbotmessage': True, 'message': message, 'date': str(datetime.utcnow())})
-    return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
-
-
-@app.route('/chatbot/train/get')
-def chatbot_train_get():
-    parser = reqparse.RequestParser()
-    parser.add_argument('message', type=str, required=False, help="parameter message has to be provided")
-    args = parser.parse_args()
-
-    history = session['train_history'] = session['train_history'] if 'train_history' in session else []
+    history = session['history'] = session['history'] if 'history' in session else []
     chatbot = Chatbot.load_by_name('default')
 
     if args.message:
@@ -84,9 +56,17 @@ def chatbot_train_get():
     return app.response_class(response=json.dumps(history[-1]), status=200, mimetype='application/json')
 
 
-@app.route('/chatbot/train/history')
-def chatbot_train_history():
-    history = session['train_history'] = session['train_history'] if 'train_history' in session else []
+@app.route('/chatbot/data')
+def chatbot_data():
+    chatbot = Chatbot.load_by_name('default')
+    data = [{"message": item[0], "normalized_message": item[1], "response": item[2]}
+            for item in zip(chatbot.messages, chatbot.normalized_messages, chatbot.responses)]
+    return app.response_class(response=json.dumps(data), status=200, mimetype='application/json')
+
+
+@app.route('/chatbot/history')
+def chatbot_history():
+    history = session['history'] = session['history'] if 'history' in session else []
     return app.response_class(response=json.dumps(history), status=200, mimetype='application/json')
 
 

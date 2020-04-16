@@ -1,0 +1,61 @@
+.cms_window {
+  height: 500px;
+  background-color: #fff;
+  top: 50%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  background-color: #f8f8f8;
+  overflow: hidden;
+  height: calc(100vh - 120px);
+}
+
+.data {
+  position: relative;
+  list-style: none;
+  padding: 20px 10px 0 10px;
+  margin: 0;
+  height: calc(100vh - 210px);
+  overflow: scroll;
+}
+
+.data .data_item {
+  clear: both;
+  overflow: hidden;
+  display: inline-block;
+  padding: 0px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: calc(100% - 20px);
+  min-width: 100px;
+  transition: all 0.5s linear;
+  position: relative;
+  opacity: 0;
+}
+
+.data .data_item.appeared {
+  opacity: 1;
+}
+
+.data .data_item .message {
+  background-color: #ffe6cb;
+  right: 100%;
+  border-radius: 10px;
+}
+
+.data .data_item .message .text {
+  color: black;
+  text-align: center;
+  padding: 5px;
+}
+
+.data .data_item .response {
+  background-color: #c7eafc;
+  float: 100%;
+  border-radius: 10px;
+}
+
+.data .data_item .response .text {
+  color: black;
+  text-align: center;
+  padding: 5px;
+}
