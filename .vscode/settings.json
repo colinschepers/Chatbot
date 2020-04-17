@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "C:\\Users\\colin\\anaconda3\\envs\\chatbot\\python.exe",
-    "python.formatting.autopep8Args": [
-        "--max-line-length=200"
-    ]
-}
