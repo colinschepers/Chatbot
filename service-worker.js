@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/EasyChatbot/precache-manifest.301cac9930eb0bf49140abf400db7be3.js"
+  "/EasyChatbot/precache-manifest.999d606ed069cf31cf8c887a48592ae9.js"
 );
 
 self.addEventListener('message', (event) => {

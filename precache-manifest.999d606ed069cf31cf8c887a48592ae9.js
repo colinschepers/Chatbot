@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4de3de174eb3295f2b0acfd1739ce597",
+    "revision": "18d4a3d882ce9633b05d1586d71e783c",
     "url": "/EasyChatbot/index.html"
   },
   {
-    "revision": "840081e35deeee65e73e",
-    "url": "/EasyChatbot/static/css/main.271a1eba.chunk.css"
+    "revision": "9b33315859b68253b053",
+    "url": "/EasyChatbot/static/css/main.a949f6e9.chunk.css"
   },
   {
     "revision": "f1f9247f91e4dd1b19a0",
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/EasyChatbot/static/js/2.100ee79d.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "840081e35deeee65e73e",
-    "url": "/EasyChatbot/static/js/main.f36b767a.chunk.js"
+    "revision": "9b33315859b68253b053",
+    "url": "/EasyChatbot/static/js/main.8bbfc0c2.chunk.js"
   },
   {
     "revision": "e0a190284740df50eb49",

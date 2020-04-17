@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/EasyChatbot/static/css/main.271a1eba.chunk.css",
-    "main.js": "/EasyChatbot/static/js/main.f36b767a.chunk.js",
-    "main.js.map": "/EasyChatbot/static/js/main.f36b767a.chunk.js.map",
+    "main.css": "/EasyChatbot/static/css/main.a949f6e9.chunk.css",
+    "main.js": "/EasyChatbot/static/js/main.8bbfc0c2.chunk.js",
+    "main.js.map": "/EasyChatbot/static/js/main.8bbfc0c2.chunk.js.map",
     "runtime-main.js": "/EasyChatbot/static/js/runtime-main.a8fab14e.js",
     "runtime-main.js.map": "/EasyChatbot/static/js/runtime-main.a8fab14e.js.map",
     "static/js/2.100ee79d.chunk.js": "/EasyChatbot/static/js/2.100ee79d.chunk.js",
     "static/js/2.100ee79d.chunk.js.map": "/EasyChatbot/static/js/2.100ee79d.chunk.js.map",
     "index.html": "/EasyChatbot/index.html",
-    "precache-manifest.301cac9930eb0bf49140abf400db7be3.js": "/EasyChatbot/precache-manifest.301cac9930eb0bf49140abf400db7be3.js",
+    "precache-manifest.999d606ed069cf31cf8c887a48592ae9.js": "/EasyChatbot/precache-manifest.999d606ed069cf31cf8c887a48592ae9.js",
     "service-worker.js": "/EasyChatbot/service-worker.js",
-    "static/css/main.271a1eba.chunk.css.map": "/EasyChatbot/static/css/main.271a1eba.chunk.css.map",
+    "static/css/main.a949f6e9.chunk.css.map": "/EasyChatbot/static/css/main.a949f6e9.chunk.css.map",
     "static/js/2.100ee79d.chunk.js.LICENSE.txt": "/EasyChatbot/static/js/2.100ee79d.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.a8fab14e.js",
     "static/js/2.100ee79d.chunk.js",
-    "static/css/main.271a1eba.chunk.css",
-    "static/js/main.f36b767a.chunk.js"
+    "static/css/main.a949f6e9.chunk.css",
+    "static/js/main.8bbfc0c2.chunk.js"
   ]
 }
