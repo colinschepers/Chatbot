@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BackendService from './BackendService.js';
+import BackendService from './MockBackendService.js';
 import './css/cms.css';
 
 var backendService = new BackendService();
@@ -81,6 +81,7 @@ class CMS extends Component {
         super(props);
         this.state = { "data": [], "filtered_data": [], "current_filter": "" }
         this.onFilterChange = this.onFilterChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.loadData = this.loadData.bind(this);
     }
 
@@ -106,6 +107,13 @@ class CMS extends Component {
         this.setState({ filtered_data: filtered_data, current_filter: filter });
     }
 
+    handleClick() {
+        this.setState({
+            current_filter: ''
+        });
+        this.loadData();
+    }
+
     loadData() {
         backendService.getData((result) => {
             if (this._isMounted) {
@@ -125,7 +133,7 @@ class CMS extends Component {
                     <FilterTextBoxContainer
                         onChange={this.onFilterChange}
                         filter={this.state.current_filter}></FilterTextBoxContainer>
-                    <RefreshButton handleClick={this.loadData}></RefreshButton>
+                    <RefreshButton handleClick={this.handleClick}></RefreshButton>
                 </div>
             </div>
         );

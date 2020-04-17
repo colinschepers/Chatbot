@@ -1,11 +1,9 @@
-.chat_window {
-  height: 500px;
+content.chat_window {
   background-color: #fff;
   top: 50%;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   background-color: #f8f8f8;
   overflow: hidden;
-  height: calc(100vh - 120px);
 }
 
 .messages {
@@ -13,7 +11,7 @@
   list-style: none;
   padding: 20px 10px 0 10px;
   margin: 0;
-  height: calc(100vh - 210px);
+  height: calc(100vh - 150px);
   overflow: scroll;
 }
 
@@ -120,6 +118,7 @@
 .bottom_wrapper {
   position: relative;
   width: 100%;
+  height: 100px;
   background-color: #fff;
   padding: 20px 20px;
   bottom: 0;

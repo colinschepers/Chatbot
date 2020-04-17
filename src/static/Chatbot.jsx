@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BackendService from './BackendService.js';
+import BackendService from './MockBackendService.js';
 import './css/chatbot.css';
 
 var backendService = new BackendService();
