@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BackendService from './MockBackendService.js';
+import BackendService from './BackendService.js';
 import './css/chatbot.css';
 
 var backendService = new BackendService();
@@ -46,7 +46,7 @@ class MessagesContainer extends Component {
 
     createBotMessages() {
         return this.props.messages.map((message, index) =>
-            <MessageBox key={index} message={message["message"]} appearance={message["isbotmessage"] ? "left" : "right"} />
+            <MessageBox key={index} message={message["text"]} appearance={message["is_bot_message"] ? "left" : "right"} />
         );
     }
 
@@ -85,7 +85,7 @@ class Chatbot extends Component {
         this.state = { "messages": [], "current_message": "" }
         this.handleClick = this.handleClick.bind(this);
         this._handleKeyPress = this._handleKeyPress.bind(this);
-        this.onChange = this.onChange.bind(this);
+        this.onMessageTextBoxChange = this.onMessageTextBoxChange.bind(this);
         this.addMessageBox = this.addMessageBox.bind(this);
     }
 
@@ -104,7 +104,7 @@ class Chatbot extends Component {
                 this.setState({
                     messages: result
                 });
-                backendService.getWelcomeMessage((result) => {
+                backendService.sendMessage('', (result) => {
                     if (this._isMounted) {
                         this.setState({
                             messages: [...this.state.messages, result]
@@ -119,7 +119,7 @@ class Chatbot extends Component {
         this._isMounted = false;
     }
 
-    onChange(e) {
+    onMessageTextBoxChange(e) {
         this.setState({ current_message: e.target.value });
     }
 
@@ -127,7 +127,7 @@ class Chatbot extends Component {
         let messages = this.state.messages;
         let current_message = this.state.current_message;
         if (current_message && enter) {
-            messages = [...messages, { "message": current_message }];
+            messages = [...messages, { "text": current_message }];
 
             backendService.sendMessage(current_message, (result) => {
                 this.setState({
@@ -150,7 +150,7 @@ class Chatbot extends Component {
                 <div className="bottom_wrapper clearfix">
                     <MessageTextBoxContainer
                         _handleKeyPress={this._handleKeyPress}
-                        onChange={this.onChange}
+                        onChange={this.onMessageTextBoxChange}
                         message={this.state.current_message}></MessageTextBoxContainer>
                     <SendButton handleClick={this.handleClick}></SendButton>
                 </div>

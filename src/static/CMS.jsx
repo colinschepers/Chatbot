@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BackendService from './MockBackendService.js';
+import BackendService from './BackendService.js';
 import './css/cms.css';
 
 var backendService = new BackendService();
@@ -9,10 +9,10 @@ class DataItem extends Component {
         return (
             <li className="data_item appeared">
                 <div className="message" >
-                    <div className="text">{this.props.message}</div>
+                    <div className="text">{this.props.questions[0]}</div>
                 </div>
                 <div className="response" >
-                    <div className="text">{this.props.response}</div>
+                    <div className="text">{this.props.answers[0]}</div>
                 </div>
             </li>
         );
@@ -37,9 +37,8 @@ class DataContainer extends Component {
     createDataItems() {
         return this.props.data.map((item, index) =>
             <DataItem key={index}
-                message={item["message"]}
-                normalized_message={item["normalized_message"]}
-                response={item["response"]} />
+                questions={item["questions"]}
+                answers={item["answers"]} />
         );
     }
 

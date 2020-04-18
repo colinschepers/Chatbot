@@ -4,20 +4,16 @@ export default class BackendService {
   }
 
   getHistory(callback) {
-    this.doRequest(this.baseUrl + "/chatbot/history", callback);
-  }
-
-  getWelcomeMessage(callback, delayInMilliseconds) {
-    this.doRequest(this.baseUrl + "/chatbot/welcome", callback, delayInMilliseconds);
+    this.doRequest(this.baseUrl + "/EasyChatbot/history", callback);
   }
 
   sendMessage(message, callback, delayInMilliseconds) {
-    let url = this.baseUrl + "/chatbot/get?" + (message ? ("message=" + message) : "");
+    let url = this.baseUrl + "/EasyChatbot/get?" + (message ? ("message=" + message) : "");
     this.doRequest(url, callback, delayInMilliseconds);
   }
 
   getData(callback) {
-    this.doRequest(this.baseUrl + "/chatbot/data", callback);
+    this.doRequest(this.baseUrl + "/EasyChatbot/qas", callback);
   }
 
   doRequest(url, callback, delayInMilliseconds = 0) {
